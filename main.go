@@ -8,6 +8,8 @@ import (
 	"fmt"
 	"log"
 	"net/http"
+
+	"golang.org/x/crypto/sha3"
 )
 
 func handler(w http.ResponseWriter, r *http.Request) {
@@ -32,9 +34,27 @@ func generateKeys(w http.ResponseWriter, r *http.Request) {
 
 }
 
+func getAddress(w http.ResponseWriter, r *http.Request) {
+	publicKeyHex := r.URL.Query().Get("publicKey")
+	publicKeyBytes, err := hex.DecodeString(publicKeyHex)
+
+	if err != nil {
+		http.Error(w, "Invalid public key", http.StatusBadRequest)
+		return
+	}
+
+	hash := sha3.NewLegacyKeccak256()
+	hash.Write(publicKeyBytes[1:])
+
+	address := hash.Sum(nil)[12:]
+
+	fmt.Fprintf(w, "Ethereum Address: %s\n", hex.EncodeToString(address))
+}
+
 func main() {
 	http.HandleFunc("/", handler)
 	http.HandleFunc("/keys", generateKeys)
+	http.HandleFunc("/address", getAddress)
 
 	fmt.Println("Server listening on port 8080")
 	log.Fatal(http.ListenAndServe(":8080", nil))
