@@ -16,7 +16,7 @@ func handler(w http.ResponseWriter, r *http.Request) {
 	fmt.Fprintf(w, "Request sent to: %s\n", r.URL.Path)
 }
 
-func generateKeys(w http.ResponseWriter, r *http.Request) {
+func generateKeys(w http.ResponseWriter, _ *http.Request) {
 	privateKey, err := ecdsa.GenerateKey(elliptic.P256(), rand.Reader)
 
 	if err != nil {
