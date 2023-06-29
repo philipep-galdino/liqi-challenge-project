@@ -1,16 +1,10 @@
-FROM golang:1.17
+FROM golang:1.17-buster
 
 WORKDIR /app
 
-COPY go.mod .
-COPY go.sum .
+COPY go.* ./
 RUN go mod download
+
 COPY . .
 
-ENV GOFLAGS=-mod=vendor
-
-RUN go build -o main .
-
-EXPOSE 8080
-
-CMD ["./main"]
+CMD ["go", "run", "./cmd/server/main.go"]
