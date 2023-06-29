@@ -1,6 +1,7 @@
 package ethereum
 
 import (
+	"context"
 	"crypto/ecdsa"
 	"log"
 	"math/big"
@@ -44,4 +45,15 @@ func SignTransaction(to string, value string, nonce uint64, privateKey *ecdsa.Pr
 	}
 
 	return signedTx, nil
+}
+
+func SendTransaction(client *ethclient.Client, signedTx *types.Transaction) error {
+	err := client.SendTransaction(context.Background(), signedTx)
+
+	if err != nil {
+		log.Fatalf("Failed to send transaction: %v", err)
+		return err
+	}
+
+	return nil
 }
