@@ -14,14 +14,14 @@ type Transaction struct {
 func SendMessage(queueURL string, messageBody string) (*sqs.SendMessageOutput, error) {
 	sess := session.Must(session.NewSessionWithOptions(session.Options{
 		SharedConfigState: session.SharedConfigEnable,
-	})
+	}))
 
 	svc := sqs.New(sess)
 
 	result, err := svc.SendMessage(&sqs.SendMessageInput{
 		DelaySeconds: aws.Int64(10),
-		MessageBody: aws.String(messageBody),
-		QueueUrl: aws.String(queueURL)
+		MessageBody:  aws.String(messageBody),
+		QueueUrl:     aws.String(queueURL),
 	})
 
 	return result, err
