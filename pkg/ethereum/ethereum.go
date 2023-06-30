@@ -3,12 +3,14 @@ package ethereum
 import (
 	"context"
 	"crypto/ecdsa"
+	"encoding/hex"
 	"log"
 	"math/big"
 	"os"
 
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/ethereum/go-ethereum/core/types"
+	"github.com/ethereum/go-ethereum/crypto"
 	"github.com/ethereum/go-ethereum/ethclient"
 	"github.com/ethereum/go-ethereum/params"
 )
@@ -47,13 +49,42 @@ func SignTransaction(to string, value string, nonce uint64, privateKey *ecdsa.Pr
 	return signedTx, nil
 }
 
-func SendTransaction(client *ethclient.Client, signedTx *types.Transaction) error {
+func SendTransaction(client *ethclient.Client, signedTx *types.Transaction) (string, error) {
 	err := client.SendTransaction(context.Background(), signedTx)
 
 	if err != nil {
 		log.Fatalf("Failed to send transaction: %v", err)
-		return err
+		return "", err
 	}
 
-	return nil
+	hash := signedTx.Hash().Hex()
+
+	return hash, nil
+}
+
+func GetNonce(client *ethclient.Client, address string) (uint64, error) {
+	nonce, err := client.PendingNonceAt(context.Background(), common.HexToAddress(address))
+
+	if err != nil {
+		log.Fatalf("Failed to get nonce: %v", err)
+		return 0, err
+	}
+
+	return nonce, nil
+}
+
+func StringToPrivateKey(privateKeyString string) (*ecdsa.PrivateKey, error) {
+	privateKeyBytes, err := hex.DecodeString(privateKeyString)
+	if err != nil {
+		log.Fatalf("Failed to decode private key: %v", err)
+		return nil, err
+	}
+
+	privateKey, err := crypto.ToECDSA(privateKeyBytes)
+	if err != nil {
+		log.Fatalf("Failed to convert private key to ECDSA pk, got error: %v", err)
+		return nil, err
+	}
+
+	return privateKey, nil
 }

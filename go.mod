@@ -2,14 +2,16 @@ module github.com/philipep-galdino/liqi-challenge-project
 
 go 1.20
 
-require golang.org/x/crypto v0.10.0
+require (
+	github.com/ethereum/go-ethereum v1.12.0
+	golang.org/x/crypto v0.10.0
+)
 
 require (
 	github.com/StackExchange/wmi v0.0.0-20180116203802-5d049714c4a6 // indirect
 	github.com/btcsuite/btcd/btcec/v2 v2.2.0 // indirect
 	github.com/deckarep/golang-set/v2 v2.1.0 // indirect
 	github.com/decred/dcrd/dcrec/secp256k1/v4 v4.0.1 // indirect
-	github.com/ethereum/go-ethereum v1.12.0 // indirect
 	github.com/go-ole/go-ole v1.2.1 // indirect
 	github.com/go-stack/stack v1.8.1 // indirect
 	github.com/gorilla/websocket v1.4.2 // indirect
@@ -22,7 +24,7 @@ require (
 
 require (
 	github.com/aws/aws-lambda-go v1.41.0
-	github.com/aws/aws-sdk-go v1.44.292 // indirect
+	github.com/aws/aws-sdk-go v1.44.292
 	github.com/jmespath/go-jmespath v0.4.0 // indirect
 	golang.org/x/sys v0.9.0 // indirect
 )

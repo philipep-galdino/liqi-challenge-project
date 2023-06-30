@@ -11,7 +11,7 @@ type Transaction struct {
 	Value string `json: "value"`
 }
 
-func SendMessage(queueURL string, messageBody string) (*sqs.SendMessageOutput, error) {
+func SendMessage(queueURL string, messageBody string) (string, error) {
 	sess := session.Must(session.NewSessionWithOptions(session.Options{
 		SharedConfigState: session.SharedConfigEnable,
 	}))
@@ -24,5 +24,5 @@ func SendMessage(queueURL string, messageBody string) (*sqs.SendMessageOutput, e
 		QueueUrl:     aws.String(queueURL),
 	})
 
-	return result, err
+	return *result.MessageId, err
 }
