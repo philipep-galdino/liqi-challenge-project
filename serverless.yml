@@ -1,0 +1,25 @@
+service: liqi-challenge-project
+
+plugins:
+  - serverless-plugin-dotenv
+
+provider:
+  name: aws
+  runtime: go1.x
+  region: ${env:AWS_REGION}
+  environment:
+    SQS_QUEUE_URL: ${env:AWS_QUEUE_URL}
+
+package:
+  exclude:
+    - ./**
+  include:
+    - ./bin/**
+
+functions:
+  handleRequest:
+    handler: bin/handleRequest
+    events:
+      - sqs: 
+          arn: ${env:AWS_QUEUE_ARN}
+          batchSize: 9
